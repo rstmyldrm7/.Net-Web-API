@@ -8,6 +8,7 @@ using PersonalProject.Domain;
 using PersonalProject.Domain.Aggregate.Repositories;
 using PersonalProject.Repository;
 using PersonalProject.Repository.Repository;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -27,9 +28,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 options.UseSqlServer("Data Source=(LocalDb)\\MSSQLLocalDB;Initial Catalog=Personal;Integrated Security=SSPI;");
             });
             services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ITransactionService, TransactionService>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IKimlikCommunicator, KimlikCommunicator>();
-            services.AddScoped<IDbContextHandler , DbContextHandler>();
+            services.AddScoped<IPaymentCommunicator, PaymentCommunicator>();
+            services.AddScoped<IDbContextHandler, DbContextHandler>();
+            services.AddHttpClient("user").SetHandlerLifetime(TimeSpan.FromSeconds(10));
+            services.AddHttpClient("card-point", f => f.Timeout = TimeSpan.FromSeconds(10));
+            //services.AddHttpClient<IHttpClientFactory>();
             return services;
         }
     }

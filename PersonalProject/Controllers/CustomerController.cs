@@ -14,7 +14,7 @@ namespace PersonalProject.Controllers
     public class CustomerController : ControllerBase
     {
         private readonly ICustomerService _customerService;
-        public CustomerController([FromServices] ICustomerService customerService)
+        public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
         }
@@ -23,7 +23,7 @@ namespace PersonalProject.Controllers
         /// </summary>
         [HttpPost("createCustomer")]
         [ProducesResponseType(200, Type = typeof(ResponseBase<CreateCustomerResponse>))]
-        public async Task<IActionResult> Refund(CreateCustomerRequest request)
+        public async Task<IActionResult> Create(CreateCustomerRequest request)
         {
             var resp = await _customerService.CreateCustomer(request);
             return Ok(resp);

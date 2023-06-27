@@ -16,7 +16,6 @@ namespace PersonalProject.ApplicationService.Communicator.Concrete
     {
         public async Task<bool> VerifyIdentity(long IdentityNumber, string Name, string Surname, DateTime BirthYear)
         {
-            bool durum = false;
             try
             {
                 using (Kimlik.KPSPublicSoapClient servis = new Kimlik.KPSPublicSoapClient(EndpointConfiguration.KPSPublicSoap))
