@@ -12,7 +12,6 @@ namespace PersonalProject.Repository.Mapper
         {
             modelBuilder.Entity<T>(bi =>
             {
-                //bi.Property(b => b.Status)./*HasColumnType*/("bit");
                 bi.HasKey(b => b.Id);
                 Map(bi);
             });

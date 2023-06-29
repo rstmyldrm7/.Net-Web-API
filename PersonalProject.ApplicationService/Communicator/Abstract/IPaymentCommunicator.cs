@@ -11,5 +11,6 @@ namespace PersonalProject.ApplicationService.Communicator.Abstract
     public interface IPaymentCommunicator
     {
         Task<GetTokenResponse> GetToken(GetTokenRequest request);
+        Task<NonSecurePaymentResponse> NonSecurePayment(NonSecurePaymentRequest request, string token);
     }
 }

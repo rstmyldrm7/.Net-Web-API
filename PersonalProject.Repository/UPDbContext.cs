@@ -18,6 +18,7 @@ namespace PersonalProject.Repository
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             new CustomerMapper().BaseMap(modelBuilder);
+            new TransactionMapper().BaseMap(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

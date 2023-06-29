@@ -1,10 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace PersonalProject.Repository.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration_20230621 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +27,25 @@ namespace PersonalProject.Repository.Migrations
                 {
                     table.PrimaryKey("PK_Customer", x => x.Id);
                 });
+
+            migrationBuilder.CreateTable(
+                name: "Transaction",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CustomerId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OrderId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeId = table.Column<int>(type: "int", nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CardPan = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ResponseCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ResponseMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Status = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Transaction", x => x.Id);
+                });
         }
 
         /// <inheritdoc />
@@ -32,6 +53,9 @@ namespace PersonalProject.Repository.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Customer");
+
+            migrationBuilder.DropTable(
+                name: "Transaction");
         }
     }
 }

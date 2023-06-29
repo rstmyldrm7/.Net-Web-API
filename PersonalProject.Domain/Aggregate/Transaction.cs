@@ -18,5 +18,18 @@ namespace PersonalProject.Domain.Aggregate
         public string CardPan { get; set; }
         public string ResponseCode { get; set; }
         public string ResponseMessage { get; set; }
+        public Transaction(string customerId, string orderId, TransactionType typeId, decimal amount, string cardPan)
+        {
+            CustomerId = customerId;
+            OrderId = orderId;
+            TypeId = typeId;
+            Amount = amount;
+            CardPan = cardPan;
+        }
+        public void SetTransactionComplete(string responseCode, string responseMessage)
+        { 
+            ResponseCode = responseCode;
+            ResponseMessage = responseMessage;
+        }
     }
 }
