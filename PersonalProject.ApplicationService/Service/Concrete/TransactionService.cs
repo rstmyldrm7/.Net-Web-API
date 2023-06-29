@@ -30,6 +30,9 @@ namespace PersonalProject.ApplicationService.Service.Concrete
         private readonly string _apiKey;
         private readonly string _eMail;
         private readonly string _lang;
+        private readonly string _apiKeyPayment;
+        private readonly long _memberId;
+        private readonly long _merchantId;
         public TransactionService(IPaymentCommunicator paymentCommunicator, IConfiguration configuration,
             ITransactionRepository transactionRepository, IDbContextHandler dbContextHandler, IIdentityContext identityContext)
         {
@@ -40,6 +43,9 @@ namespace PersonalProject.ApplicationService.Service.Concrete
             _apiKey = configuration["TokenSettings:ApiKey"];
             _eMail = configuration["TokenSettings:Email"];
             _lang = configuration["TokenSettings:Lang"];
+            _apiKeyPayment = configuration["PaymentSettings:ApiKey"];
+            _memberId = Convert.ToInt64(configuration["PaymentSettings:MemberId"]);
+            _merchantId = Convert.ToInt64(configuration["PaymentSettings:MerchantId"]);
         }
         public async Task<GetTokenResponse> GetToken()
         {
@@ -71,13 +77,13 @@ namespace PersonalProject.ApplicationService.Service.Concrete
 
             var requestPayment = new NonSecurePaymentRequest()
             {
-                memberId = Convert.ToInt64(info.MemberId),
-                merchantId = Convert.ToInt64(info.MerchantId),
+                memberId = _memberId,
+                merchantId = _merchantId,
                 cardNumber = request.cardNumber,
                 expiryDateMonth = request.expiryDateMonth,
                 expiryDateYear = request.expiryDateYear,
                 userCode = info.UserId,
-                txnType = "AUTH",
+                txnType = "Auth",
                 installmentCount = "1",
                 currency = "949",
                 orderId = "5555555555",
@@ -109,10 +115,10 @@ namespace PersonalProject.ApplicationService.Service.Concrete
         {
             var hashRequest = new PaymentHash()
             {
-                HashPassword = _apiKey,
-                UserCode = userId,
+                HashPassword = _apiKeyPayment,
+                UserCode = _eMail,
                 Rnd = rnd,
-                TxnType = "AUTH",
+                TxnType = "Auth",
                 TotalAmount = "1",
                 CustomerId = "1",
                 OrderId = "5555555555",
@@ -156,11 +162,12 @@ namespace PersonalProject.ApplicationService.Service.Concrete
         private static string PaymentHash(PaymentHash request)
         {
             var hashString = $"{request.HashPassword}{request.UserCode}{request.Rnd}{request.TxnType}{request.TotalAmount}{request.CustomerId}{request.OrderId}";
-            System.Security.Cryptography.SHA512 s512 = System.Security.Cryptography.SHA512.Create();
-            System.Text.UnicodeEncoding ByteConverter = new System.Text.UnicodeEncoding();
-            byte[] bytes = s512.ComputeHash(ByteConverter.GetBytes(hashString));
-            var hash = System.BitConverter.ToString(bytes).Replace("-", "");
+            var s512 = SHA512.Create();
+            var byteConverter = new UnicodeEncoding();
+            var bytes = s512.ComputeHash(byteConverter.GetBytes(hashString));
+            var hash = BitConverter.ToString(bytes).Replace("-", "");
             return hash;
+
         }
 
     }
